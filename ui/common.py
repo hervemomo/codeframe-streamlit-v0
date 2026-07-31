@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import os
 import tempfile
 from pathlib import Path
@@ -15,6 +16,8 @@ from codeframe.config import ProjectConfig
 from codeframe.llm_client import TextCompletion, make_text_completion
 from codeframe.usage import UsageTracker
 from codeframe.workflow_state import initialize_workflow_state
+
+logger = logging.getLogger(__name__)
 
 APP_TITLE = "Codeframe"
 
@@ -115,6 +118,7 @@ def api_services(config: ProjectConfig) -> tuple[OpenAI, TextCompletion]:
 def show_failure(error: Exception) -> None:
     """Show a concise failure and ensure ordinary reruns do not retry it."""
 
+    logger.exception("Workflow action failed", exc_info=error)
     st.error(f"{type(error).__name__}: {error}")
 
 

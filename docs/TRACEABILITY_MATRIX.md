@@ -12,7 +12,7 @@ Status values: `MAPPED`, `IMPLEMENTED`, `PARITY VERIFIED`,
 | T05 | 8–9 | Empty responses, cleaning regexes, minimum words | `preprocessing` | `test_loaders_preprocessing.py` | Preprocessing | PARITY VERIFIED | |
 | T06 | 10–11 L6–225 | Usage log, model-compatible kwargs, retries/fail-fast | `llm_client`, `usage` | `test_llm_client.py` | Run diagnostics | PARITY VERIFIED | |
 | T07 | 10–11 L233–685 | IDs, normalized code entries, prompt format, summary columns, JSON I/O | `codebook`, `exports` | Codebook, user-codebook, split/merge tests | Codebook pages / Results | PARITY VERIFIED | |
-| T08a | 10–11 L687–779 | JSON extraction and codebook validation | `validation`, `codebook` | `test_codebook_generation.py` | Codebook pages | PARITY VERIFIED | |
+| T08a | 10–11 L687–779 | JSON extraction and codebook validation | `codebook` | `test_codebook_generation.py` | Codebook pages | PARITY VERIFIED | |
 | T08b | 10–11 L780–813 | Text cleaning and response validity | `preprocessing` | `test_loaders_preprocessing.py` | Preprocessing | PARITY VERIFIED | |
 | T09 | 10–11 L815–998 | Split/merge-derived enrichment and fallbacks | `split_codes.enrich_derived_codebook` | `test_split_merge.py` | Refinement | PARITY VERIFIED | |
 | T10 | 10–11 L1000–1232 | Missing-field-only user-codebook enhancement and preservation | `user_codebook.enhance_user_codebook_with_ai` | `test_user_codebook.py` | User Codebook | PARITY VERIFIED | |

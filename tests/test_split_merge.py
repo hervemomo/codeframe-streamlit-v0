@@ -85,6 +85,7 @@ def test_split_recodes_only_affected_rows_and_replaces_parent(tmp_path: Path) ->
         subcodes=["Sub A", "Sub B"],
         subcode_definitions=["Definition A", "Definition B"],
         enrich_subcodes=False,
+        text_column="final_text_fr",
         output_dir=tmp_path,
         output_file="split.xlsx",
         include_charts=False,
@@ -124,6 +125,7 @@ def test_split_no_match_routes_to_main_catchall(tmp_path: Path) -> None:
         subcodes=["Sub A", "Sub B"],
         subcode_definitions=["Definition A", "Definition B"],
         enrich_subcodes=False,
+        text_column="final_text_fr",
         output_dir=tmp_path,
         include_charts=False,
         sleep=lambda _: None,
@@ -176,6 +178,7 @@ def test_split_ai_enrichment_populates_all_operational_fields(tmp_path: Path) ->
         "Parent",
         subcodes=["Sub A", "Sub B"],
         enrich_subcodes=True,
+        text_column="final_text_fr",
         output_dir=tmp_path,
         include_charts=False,
         sleep=lambda _: None,
@@ -184,6 +187,81 @@ def test_split_ai_enrichment_populates_all_operational_fields(tmp_path: Path) ->
     assert codebook["codes"][0]["inclusion_criteria"] == ["a1", "a2"]
     assert codebook["codes"][1]["example_verbatims"] == ["b example", "b sample"]
     assert "missing_fields" in prompts[0]
+
+
+@pytest.mark.integration
+def test_split_ai_proposes_subcode_names_when_none_supplied(tmp_path: Path) -> None:
+    responses = [
+        json.dumps({"subcodes": ["Sub A", "Sub B"]}),
+        json.dumps(
+            {
+                "codes": [
+                    {
+                        "name": "Sub A",
+                        "definition": "Definition A",
+                        "inclusion_criteria": ["a1", "a2"],
+                        "exclusion_criteria": ["not a"],
+                        "example_verbatims": ["a example", "a sample"],
+                    },
+                    {
+                        "name": "Sub B",
+                        "definition": "Definition B",
+                        "inclusion_criteria": ["b1", "b2"],
+                        "exclusion_criteria": ["not b"],
+                        "example_verbatims": ["b example", "b sample"],
+                    },
+                ]
+            }
+        ),
+        json.dumps(
+            [
+                {"codes": [{"code": "Sub A", "confidence": 0.9}]},
+                {"codes": [{"code": "Sub B", "confidence": 0.8}]},
+            ]
+        ),
+    ]
+    prompts: list[str] = []
+
+    def complete(**kwargs: Any) -> str:
+        prompts.append(kwargs["messages"][1]["content"])
+        return responses.pop(0)
+
+    result, codebook, _ = split_code(
+        split_dataframe(),
+        base_codebook(),
+        complete,
+        "Parent",
+        n_subcodes_proposed=2,
+        enrich_subcodes=True,
+        text_column="final_text_fr",
+        output_dir=tmp_path,
+        include_charts=False,
+        sleep=lambda _: None,
+    )
+
+    assert [code["name"] for code in codebook["codes"][:2]] == ["Sub A", "Sub B"]
+    assert result["code_Sub A"].tolist() == [1, 0, 0]
+    assert result["code_Sub B"].tolist() == [0, 1, 0]
+    assert "too broad" in prompts[0]
+    assert "EXISTING CODE NAMES" in prompts[0]
+
+
+@pytest.mark.unit
+def test_split_proposal_with_malformed_json_raises(tmp_path: Path) -> None:
+    def complete(**_: Any) -> str:
+        return "not valid json"
+
+    with pytest.raises(ValueError, match="Model returned no sub-codes."):
+        split_code(
+            split_dataframe(),
+            base_codebook(),
+            complete,
+            "Parent",
+            text_column="final_text_fr",
+            output_dir=tmp_path,
+            include_charts=False,
+            sleep=lambda _: None,
+        )
 
 
 @pytest.mark.unit
@@ -254,6 +332,7 @@ def test_merge_is_deterministic_or_and_max_without_llm_reclassification(
         merged_exclusion_criteria=["exclude"],
         merged_example_verbatims=["x", "y"],
         enrich_merged=False,
+        text_column="final_text_fr",
         output_dir=tmp_path,
         output_file="merge.xlsx",
         include_charts=False,
@@ -301,6 +380,7 @@ def test_merge_ai_name_and_enrichment_are_grounded_in_sources(tmp_path: Path) ->
         complete,
         ["A", "B"],
         enrich_merged=True,
+        text_column="final_text_fr",
         output_dir=tmp_path,
         include_charts=False,
     )
@@ -310,6 +390,24 @@ def test_merge_ai_name_and_enrichment_are_grounded_in_sources(tmp_path: Path) ->
     assert codebook["codes"][0]["inclusion_criteria"] == ["one", "two"]
     assert "SELECTED SOURCE CODES" in prompts[0]
     assert "REPRESENTATIVE ASSIGNED RESPONSES" in prompts[1]
+
+
+@pytest.mark.unit
+def test_merge_name_proposal_with_malformed_json_raises(tmp_path: Path) -> None:
+    def complete(**_: Any) -> str:
+        return "not valid json"
+
+    with pytest.raises(ValueError, match="Model returned no name."):
+        merge_codes(
+            merge_dataframe(),
+            merge_codebook(),
+            complete,
+            ["A", "B"],
+            enrich_merged=False,
+            text_column="final_text_fr",
+            output_dir=tmp_path,
+            include_charts=False,
+        )
 
 
 @pytest.mark.unit
@@ -340,6 +438,7 @@ def test_merge_groups_rejects_reused_sources(tmp_path: Path) -> None:
             merge_codebook(),
             lambda **_: "",
             configs,
+            text_column="final_text_fr",
             output_dir=tmp_path,
             include_charts=False,
         )

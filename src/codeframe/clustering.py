@@ -128,7 +128,7 @@ def discover_themes(
     dataframe: pd.DataFrame,
     client: EmbeddingClient,
     *,
-    text_column: str = "final_text_fr",
+    text_column: str,
     config: ClusteringConfig | None = None,
     model_config: ModelConfig | None = None,
     usage_tracker: UsageTracker | None = None,

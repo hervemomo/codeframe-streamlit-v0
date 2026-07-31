@@ -13,7 +13,7 @@ from typing import Any, cast
 import numpy as np
 import pandas as pd
 
-from codeframe.ai_coding import normalize_coding_result
+from codeframe.ai_coding import deduplicate_texts, normalize_coding_result
 from codeframe.codebook import (
     CODE_ID_FIELD,
     OTHER_FALLBACK_CONFIDENCE,
@@ -790,24 +790,12 @@ def code_part2_batch(
     return results
 
 
-def _deduplicate_texts(texts: Sequence[str]) -> tuple[list[str], list[int]]:
-    positions: dict[str, int] = {}
-    unique: list[str] = []
-    index_map: list[int] = []
-    for text in texts:
-        if text not in positions:
-            positions[text] = len(unique)
-            unique.append(text)
-        index_map.append(positions[text])
-    return unique, index_map
-
-
 def apply_enhanced_codebook_part2(
     complete: TextCompletion,
     dataframe: pd.DataFrame,
     codebook: CodebookMapping,
     *,
-    text_column: str = "final_text_fr",
+    text_column: str,
     survey_context: str,
     question: str,
     model_config: ModelConfig | None = None,
@@ -832,7 +820,7 @@ def apply_enhanced_codebook_part2(
         raise ValueError("Part 2 requires a catch-all code in the codebook.")
     coded = dataframe.copy(deep=True)
     texts = coded[text_column].astype(str).tolist()
-    unique, index_map = _deduplicate_texts(texts)
+    unique, index_map = deduplicate_texts(texts)
     if settings.part2_use_batch:
         unique_results = code_part2_batch(
             complete,
@@ -961,7 +949,7 @@ def run_user_codebook_coding(
     file_stem: str,
     survey_context: str,
     question: str,
-    text_column: str = "final_text_fr",
+    text_column: str,
     model_config: ModelConfig | None = None,
     config: UserCodebookConfig | None = None,
     include_charts: bool = True,

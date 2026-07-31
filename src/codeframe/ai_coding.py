@@ -318,7 +318,7 @@ def apply_codes_to_dataframe(
     dataframe: pd.DataFrame,
     codebook: CodebookMapping,
     *,
-    text_column: str = "final_text_fr",
+    text_column: str,
     coding_config: CodingConfig | None = None,
     model_config: ModelConfig | None = None,
     sleep: Callable[[float], None] = time.sleep,
@@ -388,7 +388,7 @@ def run_ai_codebook_workflow(
     output_dir: Path,
     file_stem: str,
     survey_context: str,
-    text_column: str = "final_text_fr",
+    text_column: str | None = None,
     language_config: LanguageConfig | None = None,
     model_config: ModelConfig | None = None,
     coding_config: CodingConfig | None = None,
@@ -401,6 +401,8 @@ def run_ai_codebook_workflow(
 ) -> AIWorkflowResult:
     """Run clustering, generation, coding, summaries, and notebook report exports."""
 
+    language = language_config or LanguageConfig()
+    text_column = text_column or language.text_column
     coding = coding_config or CodingConfig(mode="ai")
     if coding.mode != "ai":
         raise ValueError("AI codebook workflow requires coding mode 'ai'.")

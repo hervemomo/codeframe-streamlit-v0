@@ -150,6 +150,7 @@ def test_apply_codes_adds_numeric_columns_and_audit_json() -> None:
         complete,
         dataframe,
         codebook(),
+        text_column="final_text_fr",
         coding_config=CodingConfig(coding_batch_size=2),
         sleep=lambda _: None,
     )

@@ -158,6 +158,7 @@ def test_discover_themes_resets_index_and_preserves_cluster_contract() -> None:
     result, returned_labels, representatives, sizes = discover_themes(
         dataframe,
         SimpleNamespace(),
+        text_column="final_text_fr",
         embed=embed,
         reduce=reduce,
         cluster=cluster,
@@ -186,6 +187,7 @@ def test_discover_themes_uses_configured_embedding_model_and_tracker() -> None:
     discover_themes(
         dataframe,
         SimpleNamespace(embeddings=resource),
+        text_column="final_text_fr",
         model_config=ModelConfig(embedding_model="custom-embedding", embedding_batch_size=4),
         usage_tracker=tracker,
         reduce=reduce,
@@ -202,4 +204,5 @@ def test_discover_themes_requires_ten_rows() -> None:
         discover_themes(
             pd.DataFrame({"final_text_fr": ["x"] * 9}),
             SimpleNamespace(),
+            text_column="final_text_fr",
         )

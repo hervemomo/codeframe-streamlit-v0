@@ -22,7 +22,7 @@ read, or file write at import time.
 | Module | Notebook responsibility | Phase |
 |---|---|---:|
 | `config` | Typed replacement for cell 5 globals | 1 |
-| `schemas`, `exceptions`, `validation` | Shared codebook/result contracts and safe errors | 1–4 |
+| `schemas`, `exceptions` | Shared codebook/result contracts and safe errors | 1–4 |
 | `parity` | Immutable source-notebook baseline | 1 |
 | `loaders`, `preprocessing` | Survey load, IDs, cleaning, invalid/duplicate audit | 2 |
 | `language`, `translation` | Lingua status/confidence and translation routing | 2 |
