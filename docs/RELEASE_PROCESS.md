@@ -1,15 +1,26 @@
 # Release Process
 
-Finalize during Phase 5.
+## Release candidate
 
-## Proposed flow
+1. Create a short-lived branch from `develop` (or the repository's configured
+   integration branch).
+2. Update the package version and release notes when a versioned release is intended.
+3. Run the CI-equivalent non-live validation in a clean Python 3.12 environment.
+4. Confirm `original_notebook.ipynb` matches its recorded checksum and review
+   `FINAL_PARITY_REPORT.md` plus all accepted differences.
+5. Open a pull request; require the CI workflow and human review before merge.
+6. Merge to `develop`, perform staging validation when a staging target exists, then
+   open a release pull request to `main`.
 
-1. Create a short-lived feature branch from the integration branch.
-2. Implement a coherent change and run proportional validation.
-3. Open a pull request and satisfy required CI checks.
-4. Merge to the integration branch and deploy to development/staging when configured.
-5. Open a reviewed release pull request to the production branch.
-6. Obtain required approvals.
-7. Deploy from the approved branch, tag, or release.
-8. Perform post-deployment smoke validation.
-9. Roll back or forward-fix if validation fails.
+## Release and verification
+
+1. Tag the approved `main` commit using the repository's chosen semantic version.
+2. Build from that exact commit; do not reuse unverified local artifacts.
+3. Inject `OPENAI_API_KEY` through the hosting secret manager, never the repository.
+4. Deploy only after the manual controls in `CI_CD.md` are configured.
+5. Verify the health endpoint/startup, project setup, a non-sensitive mocked or test
+   survey workflow, downloads, and absence of secrets/survey content in logs.
+6. Record the deployed commit/tag, environment, verifier, and time.
+
+No tag, hosted deployment, branch protection, or environment configuration has been
+performed or claimed by this implementation.

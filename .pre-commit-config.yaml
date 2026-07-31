@@ -1,0 +1,19 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.12
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+  - repo: local
+    hooks:
+      - id: notebook-baseline
+        name: Verify immutable notebook baseline
+        entry: python scripts/check_notebook_baseline.py
+        language: system
+        pass_filenames: false
+      - id: architecture
+        name: Verify package dependency direction
+        entry: python scripts/check_architecture.py
+        language: system
+        pass_filenames: false

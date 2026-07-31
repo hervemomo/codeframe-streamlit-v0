@@ -2,7 +2,7 @@
 
 ## Objective
 
-Convert `notebook_original.ipynb` into a modular, tested, CI/CD-ready Streamlit
+Convert `original_notebook.ipynb` into a modular, tested, CI/CD-ready Streamlit
 application while preserving notebook behavior. Cross-cutting rules (parity,
 architecture, testing, CI/CD, secrets) live in `AGENTS.md` — this document covers phase
 scope, exit gates, and sequencing only.
@@ -24,14 +24,14 @@ All other transitions proceed automatically once the exit gate is met.
 
 ## Phase 1 — Notebook Analysis, Architecture, Foundation, and CI
 
-**Status:** NOT STARTED
+**Status:** COMPLETE
 
 ### Scope
 
 - Inventory every behaviorally relevant notebook cell or logical cell group: inputs,
   outputs, transformations, prompts, model parameters, dependencies, globals, side
   effects, fallbacks, reports, and exports.
-- Record the checksum of `notebook_original.ipynb` as the baseline CI will enforce
+- Record the checksum of `original_notebook.ipynb` as the baseline CI will enforce
   against for the rest of the project.
 - Establish architecture, schemas, package skeleton, dependency config
   (`pyproject.toml`), pre-commit, and CI foundation (lint, type check, test, build).
@@ -53,7 +53,7 @@ All other transitions proceed automatically once the exit gate is met.
 
 ## Phase 2 — Preprocessing, Language, Audit, Reporting, and Exports
 
-**Status:** NOT STARTED
+**Status:** COMPLETE
 
 ### Scope
 
@@ -77,7 +77,7 @@ All other transitions proceed automatically once the exit gate is met.
 
 ## Phase 3 — Embeddings, Clustering, AI Codebook, and Automated Coding
 
-**Status:** NOT STARTED
+**Status:** COMPLETE
 
 ### Scope
 
@@ -105,7 +105,7 @@ All other transitions proceed automatically once the exit gate is met.
 
 ## Phase 4 — User Codebook, Enrichment, Coding, Split, and Merge
 
-**Status:** NOT STARTED
+**Status:** COMPLETE
 
 ### Scope
 
@@ -132,7 +132,7 @@ All other transitions proceed automatically once the exit gate is met.
 
 ## Phase 5 — Streamlit UI, End-to-End Validation, and Deployment Readiness
 
-**Status:** NOT STARTED
+**Status:** COMPLETE
 
 ### Scope
 

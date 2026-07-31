@@ -1,8 +1,8 @@
-# Codex Master Prompt: Convert `notebook_original.ipynb` into a Streamlit Application
+# Codex Master Prompt: Convert `original_notebook.ipynb` into a Streamlit Application
 
 ## Mission
 
-You are the implementation agent for this repository. Convert `notebook_original.ipynb`
+You are the implementation agent for this repository. Convert `original_notebook.ipynb`
 into a modular, testable, CI/CD-ready Streamlit application for coding open-ended survey
 responses, while preserving its behavior exactly (see parity rules below).
 
@@ -70,7 +70,7 @@ automatically without asking for approval.
 
 See `AGENTS.md` § Definition of Done. Do not mark the project complete while any
 required check is failing, while any notebook cell remains unmapped in the traceability
-matrix, or while `notebook_original.ipynb` has diverged from its Phase-1 checksum.
+matrix, or while `original_notebook.ipynb` has diverged from its Phase-1 checksum.
 
 ## Final Report
 

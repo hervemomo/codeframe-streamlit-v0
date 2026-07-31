@@ -10,7 +10,7 @@ true for the entire project regardless of which phase is active.
 
 ## Mission
 
-Convert `notebook_original.ipynb` into a modular, testable, CI/CD-ready Streamlit
+Convert `original_notebook.ipynb` into a modular, testable, CI/CD-ready Streamlit
 application for coding open-ended survey responses, without changing its behavior.
 
 ```text
@@ -26,7 +26,7 @@ to run both.
 
 ## Source of Truth and No Silent Omissions
 
-`notebook_original.ipynb` is the behavioral baseline until parity is verified.
+`original_notebook.ipynb` is the behavioral baseline until parity is verified.
 
 - Extract **all** functionality, transformations, validations, fallbacks, diagnostics,
   reports, charts, files, and outputs from the notebook — including sections not
@@ -36,7 +36,7 @@ to run both.
 - Re-inspect the relevant notebook cells whenever behavior is ambiguous, incomplete,
   contradictory, or unclear. Never invent behavior from module names, comments, or
   memory of the notebook.
-- Never overwrite or substantially modify `notebook_original.ipynb`. CI enforces this
+- Never overwrite or substantially modify `original_notebook.ipynb`. CI enforces this
   (see CI/CD section) — do not rely on prompt discipline alone.
 
 ## Parity Rules
@@ -201,7 +201,7 @@ CI runs on PRs to `develop`/`main`, pushes to those branches, and manual dispatc
 validates: clean install, formatting, lint, type check, unit + integration tests,
 coverage, security, dependency audit, package build, module imports, absence of
 Streamlit imports in domain modules, Streamlit startup smoke test — **and a checksum
-check that `notebook_original.ipynb` is byte-identical to its Phase-1 baseline.** Fail
+check that `original_notebook.ipynb` is byte-identical to its Phase-1 baseline.** Fail
 the build if it differs.
 
 Never claim branch protection, GitHub environments, secrets, required reviewers, or

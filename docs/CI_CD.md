@@ -1,50 +1,47 @@
-# CI/CD Plan
-
-This is an initial contract. Codex must align it with the repository and hosting provider.
+# CI/CD
 
 ## Continuous integration
 
-CI should run on pull requests and protected integration/production branches and include, as applicable:
+`.github/workflows/ci.yml` runs for pull requests and pushes targeting `develop`
+or `main`, plus manual dispatch. It uses Python 3.12 and:
 
-- clean installation;
-- formatting verification;
-- linting;
-- static type checking;
-- targeted or full non-live tests according to workflow scope;
-- coverage enforcement;
-- security checks;
-- dependency audit;
-- package/import validation;
-- Streamlit startup smoke validation.
+1. installs `.[dev]` from authoritative `pyproject.toml`;
+2. verifies the immutable notebook SHA-256;
+3. rejects Streamlit imports in `src/codeframe`;
+4. checks Ruff formatting and lint;
+5. runs strict mypy;
+6. runs the non-live pytest suite with an 80% coverage gate;
+7. runs Bandit and pip-audit;
+8. builds the package and validates its import;
+9. starts the final Streamlit application headlessly and polls its local health
+   endpoint.
+
+Default tests never call live APIs. The `live_api` marker is opt-in and excluded
+from CI. Streamlit `AppTest` coverage verifies safe prerequisites, both explicit
+coding actions with mocked services, cancelled refinement freshness, and results
+rendering.
+
+## Dependency authority
+
+`pyproject.toml` defines runtime and development dependencies. The retained
+`requirements.txt` contains only `.` for deployment platforms that require that
+filename, so it cannot silently diverge.
 
 ## Continuous delivery
 
-Recommended flow:
-
-```text
-feature branch
-→ pull request
-→ required CI checks
-→ merge to integration branch
-→ development/staging deployment
-→ release pull request
-→ protected production deployment
-```
+No deployment workflow exists because no hosting target, credentials, data-retention
+policy, or environment policy was selected. Repository CI and local launch are ready;
+provider configuration is deliberately a manual product/operations decision.
 
 ## Manual repository settings
 
-Codex must not claim these are configured unless verified:
+The following are not verified or configured by files in this repository:
 
-- branch protection;
-- required status checks;
+- branch protection and required checks;
+- reviewer rules;
 - GitHub environments;
-- reviewers and approvals;
-- repository secrets;
-- hosting credentials.
-
-## Test policy
-
-- Use targeted tests during implementation.
-- Use affected-component tests when shared contracts change.
-- Use phase-gate checks at each phase boundary.
-- Run the complete non-live validation once before final completion.
+- repository/hosting secrets;
+- deployment target and credentials;
+- survey-data residency, retention, and access controls;
+- hosted application authentication and authorization;
+- post-deployment health monitoring and alerting.

@@ -38,6 +38,8 @@ reports/
 .tox/
 .nox/
 .hypothesis/
+.pre-commit-cache/
+.pip-audit-cache/
 coverage.xml
 junit.xml
 
